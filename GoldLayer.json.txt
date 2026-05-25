@@ -1,0 +1,393 @@
+{
+    "name": "Gold_Layer",
+    "properties": {
+        "activities": [
+            {
+                "name": "Load Dim_Platform",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Bridge_Responded_Database",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_DimPlatform]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Dim_Country",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_DimCountry]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Dim_AIUsage",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Dim_Country",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_DimAIUsage]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Bridge_RespondedPlatform",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Dim_AIUsage",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_BridgeRespondentPlatform]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Bridge_Responded_Database",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Bridge_RespondentDatabase",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_BridgeRespondentDatabase]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Bridge_RespondentDatabase",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Bridge_Responded_Language",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_BridgeRespondentDatabase]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Bridge_Responded_Language",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Bridge_RespondedPlatform",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_BridgeRespondentLanguage]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Dim_Employment",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Dim_Platform",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_DimEmployment]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Dim_Education",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Dim_Employment",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_DimEducation]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load DimDatabaseTechnology",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Dim_Education",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_DimDatabaseTechnology]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Dim_ProgrammingLanguage",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load DimDatabaseTechnology",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_DimProgrammingLanguage]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load Dim_RemoteWork",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Dim_ProgrammingLanguage",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_DimRemoteWork]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            },
+            {
+                "name": "Load FactDevelperSurvey",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load Dim_RemoteWork",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[gold].[usp_Load_FactDeveloperSurvey]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": "2026-05-20T21:00:56Z"
+    },
+    "type": "Microsoft.Synapse/workspaces/pipelines"
+}

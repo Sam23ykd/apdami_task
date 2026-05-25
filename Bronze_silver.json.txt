@@ -1,0 +1,119 @@
+{
+    "name": "Bronze_To_Silver",
+    "properties": {
+        "activities": [
+            {
+                "name": "Bronze Layer",
+                "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "SqlPoolSink",
+                        "writeBehavior": "Insert",
+                        "sqlWriterUseTableLock": false
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "SourceFile",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "SqlPoolTable1",
+                        "type": "DatasetReference"
+                    }
+                ]
+            },
+            {
+                "name": "Silver Layer",
+                "type": "SqlPoolStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Truncate Silver Tables",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "sqlPool": {
+                    "referenceName": "apdamidb",
+                    "type": "SqlPoolReference"
+                },
+                "typeProperties": {
+                    "storedProcedureName": "[silver].[usp_Load_StackOverflowClean]"
+                }
+            },
+            {
+                "name": "Truncate Silver Tables",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Bronze Layer",
+                        "dependencyConditions": [
+                            "Completed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[usp_Truncate_Tables]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "apdami-WorkspaceDefaultSqlServer",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "DBName": "apdamidb"
+                    }
+                }
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": "2026-05-18T20:51:31Z"
+    },
+    "type": "Microsoft.Synapse/workspaces/pipelines"
+}
