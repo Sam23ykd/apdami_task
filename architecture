@@ -1,1 +1,17 @@
+Below is the complete architecture of this project overview:
+
+
+Raw CSV
+   ↓
+Azure Data Lake
+   ↓
+Synapse Pipeline
+   ↓
+SQL Transformations
+   ↓
+Star Schema Modeling
+   ↓
+Power BI Semantic Model
+   ↓
+Interactive Dashboard
 
