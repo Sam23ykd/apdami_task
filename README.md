@@ -1,7 +1,7 @@
 # 📊 Developer Salary Competitiveness Dashboard
 > End-to-end cloud analytics solution built on Azure Synapse & Microsoft Fabric
 
-![Dashboard Screenshot](docs/dashboard_screenshot.png)
+![Dashboard Screenshot](docs/Image 26-05-2026 at 01.15.)
 
 ---
 
